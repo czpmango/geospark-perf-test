@@ -1,0 +1,8 @@
+/target/
+*.csv
+*.tsv
+*.png
+*.tar.gz
+*.log
+./scala/spark-warehouse/*
+./scala/target/*
