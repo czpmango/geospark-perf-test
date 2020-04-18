@@ -17,10 +17,7 @@ object GeoSparkTest {
 
   // default configs
   val funcList: ArrayBuffer[String] = ArrayBuffer("ST_Point", "ST_IsValid", "ST_Within")
-  val resourceFolder = System.getProperty("user.dir") + "/newCsv/"
-  val csvPolygon = resourceFolder + "polygon100k.csv"
-  val csvPoint = resourceFolder + "testpoint.csv"
-  val csvShapefile = resourceFolder + "shapefiles/dbf"
+  val resourceFolder = System.getProperty("user.dir") + "/csv/"
 
   var inputPath: StringBuilder = new StringBuilder("")
   var outputPath: StringBuilder = new StringBuilder("")
@@ -34,24 +31,24 @@ object GeoSparkTest {
     "ST_Equals" -> "st_equals.csv",
     "ST_Touches" -> "st_touches.csv",
     "ST_IsSimple" -> "st_issimple.csv",
-    "ST_GeometryType" -> "st_geometry_type.csv",
-    "ST_MakeValid" -> "st_make_valid.csv",
-    "ST_SimplifyPreserveTopology" -> "st_simplify_preserve_topology.csv",
+    // "ST_GeometryType" -> "st_geometry_type.csv",
+    // "ST_MakeValid" -> "st_make_valid.csv",
+    // "ST_SimplifyPreserveTopology" -> "st_simplify_preserve_topology.csv",
     "ST_Contains" -> "st_contains.csv",
     "ST_Intersects" -> "st_intersects.csv",
     "ST_Within" -> "st_within.csv",
     "ST_Distance" -> "st_distance.csv",
     "ST_Area" -> "st_area.csv",
     "ST_Centroid" -> "st_length.csv",
-    "ST_HausdorffDistance" -> "st_hausdorffdistance.csv",
+    // "ST_HausdorffDistance" -> "st_hausdorffdistance.csv",
     "ST_ConvexHull" -> "st_convexhull.csv",
-    "ST_NPoints" -> "st_npoints.csv",
+    // "ST_NPoints" -> "st_npoints.csv",
     "ST_Envelope" -> "st_envelope.csv",
     "ST_Buffer" -> "st_buffer.csv",
     "ST_Union_Aggr" -> "st_union_aggr.csv",
     "ST_Envelope_Aggr" -> "st_envelope_aggr.csv",
     "ST_Transform" -> "st_transform.csv",
-    "ST_CurveToLine" -> "st_curvetoline.csv",
+    // "ST_CurveToLine" -> "st_curvetoline.csv",
     "ST_GeomFromWkt" -> "st_geomfromwkt.csv",
     "ST_GeomFromGeoJSON" -> "st_geomfromgeojson.csv",
     "ST_AsText" -> "st_astext.csv"
@@ -69,9 +66,7 @@ object GeoSparkTest {
   def main(args: Array[String]) {
     // parser console args
     val arglist = args.toList
-
     val argsMap = Parser.nextOption(Map(), arglist)
-
     if (argsMap.contains('inputCsvPath)) {
       inputPath = new StringBuilder(argsMap('inputCsvPath))
     }
@@ -101,36 +96,24 @@ object GeoSparkTest {
     //    println("test times per function : "+perfTestTimes)
 
 
-    //
+    // perf tests
     import scala.collection.mutable.ArrayBuffer
     var perfLog = ArrayBuffer[Double]()
-    val curFunc = "ST_Crosssfdfes"
     var errorFlag = false
-    for (i <- 1 to perfTestTimes) {
-//      val func_opt = Util.getFunc(curFunc)
-//      func_opt match {
-//        Some(func) => perfLog += func_opt()
-//        Option.case None =>  errorFlag = true
-//      }
-//      if (errorFlag){
-//        println("No this function..........")
-//      }
-      val func = Util.getFunc(curFunc)
-      if(func != 0.0){
 
-      }else{
-        println("No this function...........")
+    val keys = funcCsvMap.keySet
+    for (key <- keys){
+      var curFunc = key
+      for (i <- 1 to perfTestTimes) {
+        val func = Util.getFunc(curFunc)
+        if(func != 0.0){
+          perfLog += func()
+        }else{
+          println("No this function...........")
+        }
       }
+      Util.perfLog(curFunc, perfLog)
     }
-    Util.perfLog(curFunc, perfLog)
-    // --------------------------------------
-    //    import scala.collection.mutable.ArrayBuffer
-    //    var perf = ArrayBuffer[Double]()
-    //    for (i <- 1 to perfTestTimes){
-    //       perf += ST_Intersection_test()
-    //    }
-    //    Util.perfLog("ST_Intersection_czp",perf)
-    // --------------------------------------
 
     //   ST_Point_test()
     //   ST_Intersection_test()
@@ -665,7 +648,7 @@ object GeoSparkTest {
 
   def ST_Transform_test(): Double = {
     var csvPath = resourceFolder + funcCsvMap("ST_Transform")
-    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPolygon).limit(10)
+    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath).limit(10)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
