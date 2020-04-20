@@ -1,5 +1,7 @@
 /target/
 *.csv
+*.swo
+*.swp
 *.json
 *.tsv
 *.png
