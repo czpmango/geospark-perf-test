@@ -59,7 +59,7 @@ object GeoSparkTest {
 
   var sparkSession: SparkSession = SparkSession.builder().config("spark.serializer", classOf[KryoSerializer].getName).
     config("spark.kryo.registrator", classOf[GeoSparkVizKryoRegistrator].getName).
-    master("local[*]").appName("GeoSparkSQL-demo").getOrCreate()
+    appName("GeoSparkSQL-demo").getOrCreate()
 
   GeoSparkSQLRegistrator.registerAll(sparkSession)
 
