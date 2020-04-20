@@ -46,11 +46,11 @@ object GeoSparkTest {
     "ST_Envelope" -> "st_envelope.csv",
     "ST_Buffer" -> "st_buffer.csv",
     "ST_Union_Aggr" -> "st_union_aggr.csv",
-    "ST_Envelope_Aggr" -> "st_envelope_aggr.csv",
+    // "ST_Envelope_Aggr" -> "st_envelope_aggr.csv",
     "ST_Transform" -> "st_transform.csv",
     // "ST_CurveToLine" -> "st_curvetoline.csv",
     "ST_GeomFromWkt" -> "st_geomfromwkt.csv",
-    "ST_GeomFromGeoJSON" -> "st_geomfromgeojson.csv",
+    "ST_GeomFromGeojson" -> "st_geomfromgeojson.csv",
     "ST_AsText" -> "st_astext.csv"
   )
   // register geospark
@@ -101,6 +101,18 @@ object GeoSparkTest {
     var perfLog = ArrayBuffer[Double]()
     var errorFlag = false
 
+    // test specific func
+    for (i <- 1 to perfTestTimes) {
+      val func = Util.getFunc(testFunc.toString())
+      if(func != -1.0){
+        perfLog += func()
+      }else{
+        println("No this function...........")
+      }
+    }
+    Util.perfLog(testFunc.toString, perfLog)
+
+    // test all funcs
     val keys = funcCsvMap.keySet
     for (key <- keys){
       var curFunc = key
@@ -141,8 +153,8 @@ object GeoSparkTest {
     //   ST_Union_Aggr_test()
     //   ST_Transform_test()
     //   // ST_CurveToLine_test // *
-    //   ST_GeomFromGeoJSON_test()
-    //   ST_GeomFromWKT_test()
+    //   ST_GeomFromGeojson_test()
+    //   ST_GeomFromWkt_test()
     //   ST_AsText_test()
     //   ST_Centroid_test()
   }
@@ -671,15 +683,15 @@ object GeoSparkTest {
     return -1.0
   }
 
-  def ST_GeomFromGeoJSON_test(): Double = {
-    var csvPath = resourceFolder + funcCsvMap("ST_GeomFromGeoJSON")
+  def ST_GeomFromGeojson_test(): Double = {
+    var csvPath = resourceFolder + funcCsvMap("ST_GeomFromGeojson")
     var inputDf = sparkSession.read.option("delimiter", "\t").option("header", "false").csv(csvPath).limit(10)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
     var end = 0.0
     start = System.currentTimeMillis
-    var outputDf = sparkSession.sql("select ST_GeomFromGeoJSON(test._c0) from test")
+    var outputDf = sparkSession.sql("select ST_GeomFromGeojson(test._c0) from test")
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
@@ -691,15 +703,15 @@ object GeoSparkTest {
     return cost
   }
 
-  def ST_GeomFromWKT_test(): Double = {
-    var csvPath = resourceFolder + funcCsvMap("ST_GeomFromWKT")
+  def ST_GeomFromWkt_test(): Double = {
+    var csvPath = resourceFolder + funcCsvMap("ST_GeomFromWkt")
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath).limit(10)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
     var end = 0.0
     start = System.currentTimeMillis
-    var outputDf = sparkSession.sql("select ST_GeomFromWKT(test._c0) from test")
+    var outputDf = sparkSession.sql("select ST_GeomFromWkt(test._c0) from test")
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
@@ -719,7 +731,7 @@ object GeoSparkTest {
     var start = 0.0
     var end = 0.0
     start = System.currentTimeMillis
-    var outputDf = sparkSession.sql("select ST_GeomFromWKT(test._c0) from test")
+    var outputDf = sparkSession.sql("select ST_GeomFromWkt(test._c0) from test")
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
@@ -784,11 +796,11 @@ object Util {
         case "ST_Envelope_Aggr" => GeoSparkTest.ST_Envelope_Aggr_test()
         case "ST_Transform" => GeoSparkTest.ST_Transform_test()
         case "ST_CurveToLine" => GeoSparkTest.ST_CurveToLine_test()
-        case "ST_GeomFromGeoJSON" => GeoSparkTest.ST_GeomFromGeoJSON_test()
-        case "ST_GeomFromWKT" => GeoSparkTest.ST_GeomFromWKT_test()
+        case "ST_GeomFromGeojson" => GeoSparkTest.ST_GeomFromGeojson_test()
+        case "ST_GeomFromWkt" => GeoSparkTest.ST_GeomFromWkt_test()
         case "ST_AsText" => GeoSparkTest.ST_AsText_test()
 //        case _ => Option.empty
-        case _ => 0.0
+        case _ => -1.0
       }
     }
   }
