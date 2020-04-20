@@ -25,32 +25,36 @@ object GeoSparkTest {
 
   val funcCsvMap = Map(
     "ST_Point" -> "st_point.csv",
-    "ST_Intersection" -> "st_intersection.csv",
-    "ST_IsValid" -> "st_isvalid.csv",
-    "ST_Equals" -> "st_equals.csv",
-    "ST_Touches" -> "st_touches.csv",
-    "ST_IsSimple" -> "st_issimple.csv",
+    "ST_Intersection" -> "double_col.csv",
+    "ST_IsValid" -> "single_col.csv",
+    "ST_Equals" -> "double_col.csv",
+    "ST_Touches" -> "double_col.csv",
+    "ST_Overlaps" -> "double_col.csv",
+    "ST_Crosses" -> "double_col.csv",
+    "ST_IsSimple" -> "single_polygon.csv",
     // "ST_GeometryType" -> "st_geometry_type.csv",
     // "ST_MakeValid" -> "st_make_valid.csv",
     // "ST_SimplifyPreserveTopology" -> "st_simplify_preserve_topology.csv",
-    "ST_Contains" -> "st_contains.csv",
-    "ST_Intersects" -> "st_intersects.csv",
+    "ST_PolygonFromEnvelope" -> "st_polygon_from_envelope.csv",
+    "ST_Contains" -> "double_col.csv",
+    "ST_Intersects" -> "double_col.csv",
     "ST_Within" -> "st_within.csv",
     "ST_Distance" -> "st_distance.csv",
-    "ST_Area" -> "st_area.csv",
-    "ST_Centroid" -> "st_length.csv",
+    "ST_Area" -> "single_polygon.csv",
+    "ST_Centroid" -> "single_col.csv",
+    "ST_Length" -> "single_linestring.csv",
     // "ST_HausdorffDistance" -> "st_hausdorffdistance.csv",
-    "ST_ConvexHull" -> "st_convexhull.csv",
+    "ST_ConvexHull" -> "single_col.csv",
     // "ST_NPoints" -> "st_npoints.csv",
-    "ST_Envelope" -> "st_envelope.csv",
-    "ST_Buffer" -> "st_buffer.csv",
-    "ST_Union_Aggr" -> "st_union_aggr.csv",
+    "ST_Envelope" -> "single_polygon.csv",
+    "ST_Buffer" -> "single_point.csv",
+    "ST_Union_Aggr" -> "single_polygon.csv",
     // "ST_Envelope_Aggr" -> "st_envelope_aggr.csv",
-    "ST_Transform" -> "st_transform.csv",
+    "ST_Transform" -> "single_point.csv",
     // "ST_CurveToLine" -> "st_curvetoline.csv",
-    "ST_GeomFromWkt" -> "st_geomfromwkt.csv",
-    "ST_GeomFromGeojson" -> "st_geomfromgeojson.csv",
-    "ST_AsText" -> "st_astext.csv"
+    "ST_GeomFromWkt" -> "single_polygon.csv",
+//*    "ST_GeomFromGeojson" -> "st_geomfromgeojson.csv",
+    "ST_AsText" -> "single_polygon.csv"
   )
   // register geospark
   Logger.getLogger("org").setLevel(Level.WARN)
@@ -101,7 +105,7 @@ object GeoSparkTest {
 
     // perf tests
     import scala.collection.mutable.ArrayBuffer
-    var perfLog = ArrayBuffer[Double]()
+    var perfLogArr = ArrayBuffer[Double]()
     var errorFlag = false
 
     // test specific func
@@ -110,12 +114,12 @@ object GeoSparkTest {
       for (i <- 1 to perfTestTimes) {
         val func = Util.getFunc(curFunc)
         if (func != -1.0) {
-          perfLog += func()
+          perfLogArr += func()
         } else {
           println("No this function...........")
         }
       }
-      Util.perfLog(curFunc, perfLog)
+      Util.perfLog(curFunc, perfLogArr)
     }
 
     // test all funcs
@@ -127,12 +131,15 @@ object GeoSparkTest {
         for (i <- 1 to perfTestTimes) {
           val func = Util.getFunc(cur)
           if (func != 0.0) {
-            perfLog += func()
+            perfLogArr += func()
           } else {
             println("No this function...........")
           }
         }
-        Util.perfLog(cur, perfLog)
+        assert(perfLogArr.length == perfTestTimes)
+        Util.perfLog(cur, perfLogArr)
+        perfLogArr.clear()
+
       }
     } else {
       println("ERROR : Test function " + curFunc + " not exit!")
@@ -839,6 +846,8 @@ object Util {
         case "ST_IsValid" => GeoSparkTest.ST_IsValid_test()
         case "ST_Equals" => GeoSparkTest.ST_Equals_test()
         case "ST_Touches" => GeoSparkTest.ST_Touches_test()
+        case "ST_Overlaps" => GeoSparkTest.ST_Overlaps_test()
+        case "ST_Crosses" => GeoSparkTest.ST_Crosses_test()
         case "ST_IsSimple" => GeoSparkTest.ST_IsSimple_test()
         case "ST_GeomtryType" => GeoSparkTest.ST_GeometryType_test()
         case "ST_MakeValid" => GeoSparkTest.ST_MakeValid_test()
