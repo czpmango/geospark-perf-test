@@ -20,6 +20,7 @@ object GeoSparkTest {
   var resourceFolder: StringBuilder = new StringBuilder(System.getProperty("user.dir") + "/csv/")
   var outputFolder: StringBuilder = new StringBuilder(System.getProperty("user.dir") + "/output/")
   var testFunc: StringBuilder = new StringBuilder()
+  var showFlag = false
   var perfTestTimes: Int = 6
 
   val funcCsvMap = Map(
@@ -65,7 +66,7 @@ object GeoSparkTest {
     // parser console args
     val arglist = args.toList
     val argsMap = Parser.nextOption(Map(), arglist)
-    println("The args Map : "+argsMap)
+    println("The args Map : " + argsMap)
     if (argsMap.contains('inputCsvPath)) {
       resourceFolder = new StringBuilder(argsMap('inputCsvPath)).append("/")
     }
@@ -82,6 +83,9 @@ object GeoSparkTest {
     }
     if (argsMap.contains('help)) {
       println(argsMap('help))
+    }
+    if (argsMap.contains('showFlag) && argsMap('showFlag).equals(true.toString())) {
+      GeoSparkTest.showFlag = true
     }
     if (argsMap.isEmpty) {
       println("Use default configs........")
@@ -102,12 +106,12 @@ object GeoSparkTest {
 
     // test specific func
     val curFunc = testFunc.toString()
-    if (funcCsvMap.contains(curFunc)){
+    if (funcCsvMap.contains(curFunc)) {
       for (i <- 1 to perfTestTimes) {
         val func = Util.getFunc(curFunc)
-        if(func != -1.0){
+        if (func != -1.0) {
           perfLog += func()
-        }else{
+        } else {
           println("No this function...........")
         }
       }
@@ -115,26 +119,26 @@ object GeoSparkTest {
     }
 
     // test all funcs
-    else if (curFunc == "all"){
+    else if (curFunc == "all") {
       println("Test all functions .........")
       val keys = funcCsvMap.keySet
-      for (key <- keys){
+      for (key <- keys) {
         var cur = key
         for (i <- 1 to perfTestTimes) {
           val func = Util.getFunc(cur)
-          if(func != 0.0){
+          if (func != 0.0) {
             perfLog += func()
-          }else{
+          } else {
             println("No this function...........")
           }
         }
         Util.perfLog(cur, perfLog)
       }
-    }else {
-      println("ERROR : Test function "+curFunc+" not exit!")
+    } else {
+      println("ERROR : Test function " + curFunc + " not exit!")
     }
 
-
+    println(argsMap)
     //   ST_Point_test()
     //   ST_Intersection_test()
     //   ST_IsValid_test()
@@ -182,7 +186,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
 
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -202,7 +208,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -242,7 +250,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -262,7 +272,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -282,7 +294,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -302,7 +316,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -322,7 +338,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -343,7 +361,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -365,7 +385,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -386,7 +408,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -406,7 +430,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -426,7 +452,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -446,7 +474,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -466,7 +496,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -506,7 +538,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -526,7 +560,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     //    var tab = inputDf.crossJoin(inputDf)
     //    tab.show(false)
     //    val schemas = Seq("c1","c2")
@@ -550,7 +586,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -575,7 +613,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -595,7 +635,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -615,7 +657,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -635,7 +679,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -655,7 +701,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -680,7 +728,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -705,7 +755,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -725,7 +777,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -745,7 +799,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    // outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
@@ -834,6 +890,8 @@ object Parser {
         nextOption(map ++ Map('funcName -> value.toString), tail)
       case "-t" :: value :: tail =>
         nextOption(map ++ Map('perfTestTimes -> value.toString), tail)
+      case "-s" :: tail =>
+        nextOption(map ++ Map('showFlag -> true.toString), tail)
       case option :: tail =>
         nextOption(map, tail)
     }
