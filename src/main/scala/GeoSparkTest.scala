@@ -17,11 +17,9 @@ object GeoSparkTest {
 
   // default configs
   val funcList: ArrayBuffer[String] = ArrayBuffer("ST_Point", "ST_IsValid", "ST_Within")
-  val resourceFolder = System.getProperty("user.dir") + "/csv/"
-
-  var inputPath: StringBuilder = new StringBuilder("")
-  var outputPath: StringBuilder = new StringBuilder("")
-  var testFunc: StringBuilder = new StringBuilder("")
+  var resourceFolder: StringBuilder = new StringBuilder(System.getProperty("user.dir") + "/csv/")
+  var outputFolder: StringBuilder = new StringBuilder(System.getProperty("user.dir") + "/output/")
+  var testFunc: StringBuilder = new StringBuilder()
   var perfTestTimes: Int = 6
 
   val funcCsvMap = Map(
@@ -67,11 +65,12 @@ object GeoSparkTest {
     // parser console args
     val arglist = args.toList
     val argsMap = Parser.nextOption(Map(), arglist)
+    println("The args Map : "+argsMap)
     if (argsMap.contains('inputCsvPath)) {
-      inputPath = new StringBuilder(argsMap('inputCsvPath))
+      resourceFolder = new StringBuilder(argsMap('inputCsvPath)).append("/")
     }
     if (argsMap.contains('outputLogPath)) {
-      outputPath = new StringBuilder(argsMap('outputLogPath))
+      outputFolder = new StringBuilder(argsMap('outputLogPath)).append("/")
     }
     if (argsMap.contains('funcName)) {
       testFunc = new StringBuilder(argsMap('funcName))
@@ -89,8 +88,8 @@ object GeoSparkTest {
     }
 
     //    println("print configs.....")
-    //    println("input csv path : "+inputPath)
-    //    println("output log path : "+outputPath)
+    //    println("input csv path : "+resourceFolder)
+    //    println("output log path : "+outputFolder)
     //    println("test funtion name : "+testFunc)
     //    println("test func list : "+funcList)
     //    println("test times per function : "+perfTestTimes)
@@ -754,7 +753,7 @@ object GeoSparkTest {
 }
 
 object Util {
-  val local_path = "./output/"
+  val outputBaseDir = GeoSparkTest.outputFolder.toString()
   val hdfs_path = "hdfs://output/"
   val to_hdfs = false
 
@@ -763,7 +762,7 @@ object Util {
     if (to_hdfs) {
       logfileName = hdfs_path + funcName + ".log"
     } else {
-      logfileName = local_path + funcName + ".log"
+      logfileName = outputBaseDir + funcName + ".log"
     }
 
     import java.io._
