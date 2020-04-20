@@ -53,7 +53,7 @@ object GeoSparkTest {
     "ST_Transform" -> "single_point.csv",
     // "ST_CurveToLine" -> "st_curvetoline.csv",
     "ST_GeomFromWkt" -> "single_polygon.csv",
-//*    "ST_GeomFromGeojson" -> "st_geomfromgeojson.csv",
+    "ST_GeomFromGeojson" -> "st_geomfromgeojson.csv",
     "ST_AsText" -> "single_polygon.csv"
   )
   // register geospark
@@ -142,7 +142,7 @@ object GeoSparkTest {
 
       }
     } else {
-      println("ERROR : Test function " + curFunc + " not exit!")
+      println("ERROR : Test function " + curFunc + " not exist!")
     }
 
     println(argsMap)
