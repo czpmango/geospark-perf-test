@@ -102,23 +102,11 @@ object GeoSparkTest {
     var errorFlag = false
 
     // test specific func
-    for (i <- 1 to perfTestTimes) {
-      val func = Util.getFunc(testFunc.toString())
-      if(func != -1.0){
-        perfLog += func()
-      }else{
-        println("No this function...........")
-      }
-    }
-    Util.perfLog(testFunc.toString, perfLog)
-
-    // test all funcs
-    val keys = funcCsvMap.keySet
-    for (key <- keys){
-      var curFunc = key
+    val curFunc = testFunc.toString()
+    if (funcCsvMap.contains(curFunc)){
       for (i <- 1 to perfTestTimes) {
         val func = Util.getFunc(curFunc)
-        if(func != 0.0){
+        if(func != -1.0){
           perfLog += func()
         }else{
           println("No this function...........")
@@ -126,6 +114,27 @@ object GeoSparkTest {
       }
       Util.perfLog(curFunc, perfLog)
     }
+
+    // test all funcs
+    else if (curFunc == "all"){
+      println("Test all functions .........")
+      val keys = funcCsvMap.keySet
+      for (key <- keys){
+        var cur = key
+        for (i <- 1 to perfTestTimes) {
+          val func = Util.getFunc(cur)
+          if(func != 0.0){
+            perfLog += func()
+          }else{
+            println("No this function...........")
+          }
+        }
+        Util.perfLog(cur, perfLog)
+      }
+    }else {
+      println("ERROR : Test function "+curFunc+" not exit!")
+    }
+
 
     //   ST_Point_test()
     //   ST_Intersection_test()
@@ -799,7 +808,7 @@ object Util {
         case "ST_GeomFromGeojson" => GeoSparkTest.ST_GeomFromGeojson_test()
         case "ST_GeomFromWkt" => GeoSparkTest.ST_GeomFromWkt_test()
         case "ST_AsText" => GeoSparkTest.ST_AsText_test()
-//        case _ => Option.empty
+        //        case _ => Option.empty
         case _ => -1.0
       }
     }
