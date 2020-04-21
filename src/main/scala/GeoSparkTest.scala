@@ -5,11 +5,11 @@ import com.vividsolutions.jts.geom.{Coordinate, Geometry, GeometryFactory}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
-import org.datasyslab.geospark.formatMapper.shapefileParser.ShapefileReader
-import org.datasyslab.geospark.spatialRDD.SpatialRDD
-import org.datasyslab.geospark.utils.GeoSparkConf
+// import org.datasyslab.geospark.formatMapper.shapefileParser.ShapefileReader
+// import org.datasyslab.geospark.spatialRDD.SpatialRDD
+// import org.datasyslab.geospark.utils.GeoSparkConf
 import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
-import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
+// import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -32,9 +32,9 @@ object GeoSparkTest {
     "ST_Overlaps" -> "double_col.csv",
     "ST_Crosses" -> "double_col.csv",
     "ST_IsSimple" -> "single_polygon.csv",
-    // "ST_GeometryType" -> "st_geometry_type.csv",
-    // "ST_MakeValid" -> "st_make_valid.csv",
-    // "ST_SimplifyPreserveTopology" -> "st_simplify_preserve_topology.csv",
+    "ST_GeometryType" -> "single_col.csv",
+    "ST_MakeValid" -> "single_col.csv",
+    "ST_SimplifyPreserveTopology" -> "single_col.csv",
     "ST_PolygonFromEnvelope" -> "st_polygon_from_envelope.csv",
     "ST_Contains" -> "double_col.csv",
     "ST_Intersects" -> "double_col.csv",
@@ -45,11 +45,11 @@ object GeoSparkTest {
     "ST_Length" -> "single_linestring.csv",
     // "ST_HausdorffDistance" -> "st_hausdorffdistance.csv",
     "ST_ConvexHull" -> "single_col.csv",
-    // "ST_NPoints" -> "st_npoints.csv",
+    "ST_NPoints" -> "single_col.csv",
     "ST_Envelope" -> "single_polygon.csv",
     "ST_Buffer" -> "single_point.csv",
     "ST_Union_Aggr" -> "single_polygon.csv",
-    // "ST_Envelope_Aggr" -> "st_envelope_aggr.csv",
+    "ST_Envelope_Aggr" -> "single_polygon.csv",
     "ST_Transform" -> "single_point.csv",
     // "ST_CurveToLine" -> "st_curvetoline.csv",
     "ST_GeomFromWkt" -> "single_polygon.csv",
@@ -61,7 +61,7 @@ object GeoSparkTest {
   Logger.getLogger("akka").setLevel(Level.WARN)
 
   var sparkSession: SparkSession = SparkSession.builder().config("spark.serializer", classOf[KryoSerializer].getName).
-    config("spark.kryo.registrator", classOf[GeoSparkVizKryoRegistrator].getName).
+    //config("spark.kryo.registrator", classOf[GeoSparkVizKryoRegistrator].getName).
     appName("GeoSparkSQL-demo").getOrCreate()
 
   GeoSparkSQLRegistrator.registerAll(sparkSession)
@@ -359,6 +359,7 @@ object GeoSparkTest {
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
+    println("Invoking ST_GeometryType.......")
     var start = 0.0
     var end = 0.0
     start = System.currentTimeMillis
@@ -378,7 +379,7 @@ object GeoSparkTest {
 
   //geospark can not work
   def ST_MakeValid_test(): Double = {
-    import org.geotools.geometry.jts.JTS.makeValid
+    // import org.geotools.geometry.jts.JTS.makeValid
     var csvPath = resourceFolder + funcCsvMap("ST_MakeValid")
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
@@ -696,7 +697,7 @@ object GeoSparkTest {
 
   def ST_Union_Aggr_test(): Double = {
     var csvPath = resourceFolder + funcCsvMap("ST_Union_Aggr")
-    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath).limit(10)
+    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
@@ -718,12 +719,30 @@ object GeoSparkTest {
 
   // geospark doesn't have this func
   def ST_Envelope_Aggr_test(): Double = {
-    return -1.0
+    var csvPath = resourceFolder + funcCsvMap("ST_Envelope_Aggr")
+    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
+    inputDf.cache()
+    inputDf.createOrReplaceTempView("test")
+    var start = 0.0
+    var end = 0.0
+    start = System.currentTimeMillis
+    var outputDf = sparkSession.sql("select ST_Envelope_Aggr(ST_GeomFromWkt(test._c0)) from test")
+    // outputDf.collect()
+    outputDf.createOrReplaceTempView("outputDf")
+    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("CACHE TABLE outputDf")
+    end = System.currentTimeMillis
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
+    var cost = (end - start) / 1000.0
+    printf("Run Time (collect)= %f[s]\n", cost)
+    return cost
   }
 
   def ST_Transform_test(): Double = {
     var csvPath = resourceFolder + funcCsvMap("ST_Transform")
-    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath).limit(10)
+    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
@@ -750,7 +769,7 @@ object GeoSparkTest {
 
   def ST_GeomFromGeojson_test(): Double = {
     var csvPath = resourceFolder + funcCsvMap("ST_GeomFromGeojson")
-    var inputDf = sparkSession.read.option("delimiter", "\t").option("header", "false").csv(csvPath).limit(10)
+    var inputDf = sparkSession.read.option("delimiter", "\t").option("header", "false").csv(csvPath)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
@@ -772,7 +791,7 @@ object GeoSparkTest {
 
   def ST_GeomFromWkt_test(): Double = {
     var csvPath = resourceFolder + funcCsvMap("ST_GeomFromWkt")
-    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath).limit(10)
+    var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
     var start = 0.0
@@ -849,7 +868,7 @@ object Util {
         case "ST_Overlaps" => GeoSparkTest.ST_Overlaps_test()
         case "ST_Crosses" => GeoSparkTest.ST_Crosses_test()
         case "ST_IsSimple" => GeoSparkTest.ST_IsSimple_test()
-        case "ST_GeomtryType" => GeoSparkTest.ST_GeometryType_test()
+        case "ST_GeometryType" => GeoSparkTest.ST_GeometryType_test()
         case "ST_MakeValid" => GeoSparkTest.ST_MakeValid_test()
         case "ST_SimplifyPreserveTopology" => GeoSparkTest.ST_SimplifyPreserveTopology_test()
         case "ST_PolygonFromEnvelope" => GeoSparkTest.ST_PolygonFromEnvelope_test()

@@ -20,7 +20,7 @@ val SparkCompatibleVersion = "2.3"
 
 val HadoopVersion = "2.7.2"
 
-val GeoSparkVersion = "1.2.0"
+val GeoSparkVersion = "1.3.1"
 
 val dependencyScope = "compile"
 
@@ -34,8 +34,8 @@ libraryDependencies ++= Seq(
   "org.apache.hadoop" % "hadoop-mapreduce-client-core" % HadoopVersion % dependencyScope,
   "org.apache.hadoop" % "hadoop-common" % HadoopVersion % dependencyScope,
   "org.datasyslab" % "geospark" % GeoSparkVersion,
-  "org.datasyslab" % "geospark-sql_".concat(SparkCompatibleVersion) % GeoSparkVersion ,
-  "org.datasyslab" % "geospark-viz_".concat(SparkCompatibleVersion) % GeoSparkVersion
+  "org.datasyslab" % "geospark-sql_".concat(SparkCompatibleVersion) % GeoSparkVersion // ,
+//  "org.datasyslab" % "geospark-viz_".concat(SparkCompatibleVersion) % GeoSparkVersion
 )
 
 assemblyMergeStrategy in assembly := {
