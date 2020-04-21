@@ -33,7 +33,7 @@ object GeoSparkTest {
     "ST_Crosses" -> "double_col.csv",
     "ST_IsSimple" -> "single_polygon.csv",
     "ST_GeometryType" -> "single_col.csv",
-    "ST_MakeValid" -> "single_polygon.csv",
+    // "ST_MakeValid" -> "single_polygon.csv", // Currently arctern is limited by the spark udf one-to-one mechanism to not be able to test the function
     "ST_SimplifyPreserveTopology" -> "single_col.csv",
     "ST_PolygonFromEnvelope" -> "st_polygon_from_envelope.csv",
     "ST_Contains" -> "double_col.csv",
