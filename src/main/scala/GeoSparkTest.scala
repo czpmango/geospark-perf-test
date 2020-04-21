@@ -1,6 +1,4 @@
 
-import java.io.PrintWriter
-
 import com.vividsolutions.jts.geom.{Coordinate, Geometry, GeometryFactory}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.serializer.KryoSerializer
@@ -10,6 +8,8 @@ import org.apache.spark.sql.SparkSession
 // import org.datasyslab.geospark.utils.GeoSparkConf
 import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
 // import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
+
+import java.io.PrintWriter
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -33,7 +33,7 @@ object GeoSparkTest {
     "ST_Crosses" -> "double_col.csv",
     "ST_IsSimple" -> "single_polygon.csv",
     "ST_GeometryType" -> "single_col.csv",
-    "ST_MakeValid" -> "single_col.csv",
+    "ST_MakeValid" -> "single_polygon.csv",
     "ST_SimplifyPreserveTopology" -> "single_col.csv",
     "ST_PolygonFromEnvelope" -> "st_polygon_from_envelope.csv",
     "ST_Contains" -> "double_col.csv",
@@ -106,7 +106,6 @@ object GeoSparkTest {
     // perf tests
     import scala.collection.mutable.ArrayBuffer
     var perfLogArr = ArrayBuffer[Double]()
-    var errorFlag = false
 
     // test specific func
     val curFunc = testFunc.toString()
@@ -237,7 +236,9 @@ object GeoSparkTest {
     sparkSession.sql("CACHE TABLE outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
     end = System.currentTimeMillis
-    //// outputDf.show(false)
+    if (GeoSparkTest.showFlag) {
+      outputDf.show(false)
+    }
     var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
