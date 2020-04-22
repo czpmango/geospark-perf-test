@@ -940,7 +940,7 @@ class MyLocalFS(outputPath: String) extends MyFS {
     val writer = new PrintWriter(realPath + funcName + ".txt")
     val i = 0
     for (i <- 0 to durTimeArray.length - 1) {
-      writer.println("geomesa_" + funcName + "_time:" + durTimeArray(i))
+      writer.println("geospark_" + funcName + "_time:" + durTimeArray(i))
     }
     writer.close()
   }
