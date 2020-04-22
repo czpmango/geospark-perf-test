@@ -190,13 +190,12 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
-
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
+    var cost = (end - start) / 1000.0
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
     }
-    var cost = (end - start) / 1000.0
     printf("Run Time (collect)= %f[s]\n", cost)
     return cost
   }
@@ -213,7 +212,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -235,7 +234,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -257,7 +256,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -279,7 +278,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -301,7 +300,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -323,7 +322,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -345,7 +344,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -361,7 +360,6 @@ object GeoSparkTest {
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
     inputDf.createOrReplaceTempView("test")
-    println("Invoking ST_GeometryType.......")
     var start = 0.0
     var end = 0.0
     start = System.currentTimeMillis
@@ -369,7 +367,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -393,7 +391,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -416,7 +414,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -438,7 +436,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -460,7 +458,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -482,7 +480,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -504,7 +502,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -526,7 +524,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     //// outputDf.show(false)
     var cost = (end - start) / 1000.0
@@ -546,7 +544,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -568,7 +566,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -594,7 +592,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -621,7 +619,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -643,7 +641,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -665,7 +663,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -687,7 +685,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -709,7 +707,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -732,7 +730,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -754,7 +752,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -781,7 +779,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -803,7 +801,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
@@ -825,7 +823,7 @@ object GeoSparkTest {
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
+    sparkSession.sql("UNCACHE TABLE outputDf")
     end = System.currentTimeMillis
     if (GeoSparkTest.showFlag) {
       outputDf.show(false)
