@@ -956,9 +956,9 @@ class MyHDFS(outputPath: String) extends MyFS {
   import org.apache.hadoop.fs.FileSystem
   import org.apache.hadoop.fs.Path
   def parseHDFS(): Unit = {
-    var strList = outputPath.split("/", 0)
+    var strList = outputPath.split("/", -1)
     hdfsPath = strList(0) + "//" + strList(2)
-    realPath = strList.takeRight(strList.length - 3).mkString("/")
+    realPath = "/" + strList.takeRight(strList.length - 3).mkString("/")
   }
 
   parseHDFS()
