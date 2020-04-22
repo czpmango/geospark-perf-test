@@ -1,4 +1,5 @@
 #!/bin/bash
+export TERM=xterm-color
 spark_home=/home/czp/workspace/spark-2.4.4-bin-hadoop2.7/
 rm ./target/scala-2.11/GeoSparkSQLScalaTemplate-assembly-0.1.0.jar
 sbt assembly

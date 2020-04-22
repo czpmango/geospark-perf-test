@@ -2,6 +2,7 @@
 ./idea/
 ./idea/*
 *.csv
+*.txt
 *.swo
 *.swp
 *.json

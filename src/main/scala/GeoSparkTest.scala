@@ -10,6 +10,7 @@ import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
 // import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
 
 import java.io.PrintWriter
+import java.io._
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -837,25 +838,18 @@ object GeoSparkTest {
 
 object Util {
   val outputBaseDir = GeoSparkTest.outputFolder.toString()
-  val hdfs_path = "hdfs://output/"
-  val to_hdfs = false
-
+  var to_hdfs = false
+  if( GeoSparkTest.outputFolder.startsWith("hdfs") ){
+    to_hdfs = true
+  }
   def perfLog(funcName: String, perfRes: scala.collection.mutable.ArrayBuffer[Double]): Unit = {
-    var logfileName = ""
-    if (to_hdfs) {
-      logfileName = hdfs_path + funcName + ".log"
-    } else {
-      logfileName = outputBaseDir + funcName + ".log"
-    }
+    var logfileName = outputBaseDir + funcName + ".log"
+    var myFileStream : MyFS = if (to_hdfs) new MyHDFS(outputBaseDir) else new MyLocalFS(outputBaseDir)
+    myFileStream.myWrite(funcName,perfRes.toArray)
 
-    import java.io._
-    import java.text.SimpleDateFormat
-    import java.util.Date
-    val file = new PrintWriter(new File(logfileName))
-    for (perfTime <- perfRes) {
-      file.write(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()) + "    " + perfTime + " [s]\n")
-    }
-    file.close()
+//    for (perfTime <- perfRes) {
+//      file.write(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()) + "    " + perfTime + " [s]\n")
+//    }
   }
 
   def getFunc(funcString: String): () => Double = {
@@ -923,6 +917,75 @@ object Parser {
         nextOption(map ++ Map('showFlag -> true.toString), tail)
       case option :: tail =>
         nextOption(map, tail)
+    }
+  }
+}
+
+class MyFS() {
+  def myWrite(funcName: String, durTimeArray: Array[Double]): Unit = {
+  }
+}
+
+class MyLocalFS(outputPath: String) extends MyFS {
+  val realPath = outputPath
+
+  def mkdirDirectory(): Unit = {
+    val fp = new File(realPath)
+    if (!fp.exists()) {
+      fp.mkdirs()
+    }
+  }
+
+  mkdirDirectory()
+
+  override def myWrite(funcName: String, durTimeArray: Array[Double]): Unit = {
+    val writer = new PrintWriter(realPath + funcName + ".txt")
+    val i = 0
+    for (i <- 0 to durTimeArray.length - 1) {
+      writer.println("geomesa_" + funcName + "_time:" + durTimeArray(i))
+    }
+    writer.close()
+  }
+}
+
+class MyHDFS(outputPath: String) extends MyFS {
+  var hdfsPath = "hdfs://spark1:9000"
+  var realPath: String = "/test_data/"
+
+  import org.apache.hadoop.conf.Configuration
+  import org.apache.hadoop.fs.FileSystem
+  import org.apache.hadoop.fs.Path
+  def parseHDFS(): Unit = {
+    var strList = outputPath.split("/", 0)
+    hdfsPath = strList(0) + "//" + strList(2)
+    realPath = strList.takeRight(strList.length - 3).mkString("/")
+  }
+
+  parseHDFS()
+
+  val conf = new Configuration()
+  conf.set("fs.defaultFS", hdfsPath)
+  val fs = FileSystem.get(conf)
+
+  def mkdirDirectory(): Unit = {
+    if (!fs.exists(new Path(realPath))) {
+      fs.mkdirs(new Path(realPath))
+    }
+  }
+
+  mkdirDirectory()
+
+  override def myWrite(funcName: String, durTimeArray: Array[Double]): Unit = {
+    val output = fs.create(new Path(realPath + funcName + ".txt"))
+    val writer = new PrintWriter(output)
+    try {
+      val i = 0
+      for (i <- 0 to durTimeArray.length - 1) {
+        writer.println("geomesa_" + funcName + "_time:" + durTimeArray(i))
+      }
+    }
+    finally {
+      writer.close()
     }
   }
 }
