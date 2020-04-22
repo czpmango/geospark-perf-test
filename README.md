@@ -5,8 +5,22 @@
  - spark-2.4.4
 
 # compile && run test
-CMD :
+
+# Develope
 ```bash
 - modify your spark-bin path
-bash ./run-geospark.sh
+bash ./compile-run.sh
+```
+
+# Test
+```bash
+- test local
+bash run-local.sh
+
+- test yarn
+bash run-yarn.sh
+
+- test yarn func by func
+bash run-yarn-by-func.sh
+
 ```

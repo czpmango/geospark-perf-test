@@ -1,6 +1,7 @@
 /target/
 ./idea/
 ./idea/*
+/spark-warehouse/
 *.csv
 *.class
 *.txt
