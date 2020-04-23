@@ -681,7 +681,7 @@ object GeoSparkTest {
     var start = 0.0
     var end = 0.0
     start = System.currentTimeMillis
-    var outputDf = sparkSession.sql("select ST_Buffer(ST_GeomFromWkt(test._c0),1.8) from test")
+    var outputDf = sparkSession.sql("select ST_Buffer(ST_GeomFromWkt(test._c0),1.2) from test")
     // outputDf.collect()
     outputDf.createOrReplaceTempView("outputDf")
     sparkSession.sql("CACHE TABLE outputDf")
