@@ -1,0 +1,13 @@
+
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv100k -o hdfs://geospark-master:9000/log100k -f ST_Envelope_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv100k -o hdfs://geospark-master:9000/log100k -f ST_Union_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv100k -o hdfs://geospark-master:9000/log100k -f ST_Buffer -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv1m -o hdfs://geospark-master:9000/log1m -f ST_Envelope_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv1m -o hdfs://geospark-master:9000/log1m -f ST_Union_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv1m -o hdfs://geospark-master:9000/log1m -f ST_Buffer -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv10m -o hdfs://geospark-master:9000/log10m -f ST_Envelope_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv10m -o hdfs://geospark-master:9000/log10m -f ST_Union_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv10m -o hdfs://geospark-master:9000/log10m -f ST_Buffer -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv100m -o hdfs://geospark-master:9000/log100m -f ST_Envelope_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv100m -o hdfs://geospark-master:9000/log100m -f ST_Union_Aggr -t 6
+spark-submit  --master yarn --deploy-mode cluster --class GeoSparkTest file:///home/zilliz/GeoSparkTest-assembly-0.1.jar   -p hdfs://geospark-master:9000/csv/csv100m -o hdfs://geospark-master:9000/log100m -f ST_Buffer -t 6
