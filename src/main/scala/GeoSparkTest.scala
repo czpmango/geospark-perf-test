@@ -159,7 +159,7 @@ object GeoSparkTest {
       perfLogArr.clear()
       for (func1 <- funcList1) {
         for (i <- 1 to perfTestTimes) {
-          perfLogArr += gisTest1(curFunc)
+          perfLogArr += gisTest1(func1)
         }
         assert(perfLogArr.length == perfTestTimes)
         Util.perfLog(curFunc, perfLogArr)
@@ -167,7 +167,7 @@ object GeoSparkTest {
       }
       for (func2 <- funcList2) {
         for (i <- 1 to perfTestTimes) {
-          perfLogArr += gisTest2(curFunc)
+          perfLogArr += gisTest2(func2)
         }
         assert(perfLogArr.length == perfTestTimes)
         Util.perfLog(curFunc, perfLogArr)
@@ -175,7 +175,7 @@ object GeoSparkTest {
       }
       for (func3 <- funcList3) {
         for (i <- 1 to perfTestTimes) {
-          perfLogArr += gisTest3(curFunc)
+          perfLogArr += gisTest3(func3)
         }
         assert(perfLogArr.length == perfTestTimes)
         Util.perfLog(curFunc, perfLogArr)
