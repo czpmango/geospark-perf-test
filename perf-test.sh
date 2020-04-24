@@ -7,6 +7,8 @@ echo "1m test ok ......"
 echo "10m test ok ......"
 ./run-yarn-by-func100m.sh
 echo "100m test ok ......"
+./run-yarn-by-func1000m.sh
+echo "1000m test ok ......"
 ./spatial-func-test.sh
 echo "spatial func test ok ......"
 echo "All tests ok ......"
