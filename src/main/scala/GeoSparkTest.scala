@@ -135,48 +135,41 @@ object GeoSparkTest {
 
     if (funcList1.exists(x=>x==curFunc)) {
       println("Test +"+curFunc+" .........")
-      for (i <- 1 to perfTestTimes) {
-        perfLogArr += gisTest1(curFunc)
-      }
+      perfLogArr.clear()
+      perfLogArr = gisTest1(curFunc)
+      assert(perfLogArr.length == perfTestTimes)
       Util.perfLog(curFunc, perfLogArr)
     }
     else if (funcList2.exists(x=>x==curFunc)){
       println("Test +"+curFunc+" .........")
-      for (i <- 1 to perfTestTimes) {
-        perfLogArr += gisTest2(curFunc)
-      }
+      perfLogArr.clear()
+      perfLogArr = gisTest2(curFunc)
+      assert(perfLogArr.length == perfTestTimes)
       Util.perfLog(curFunc, perfLogArr)
     }
     else if (funcList3.exists(x=>x==curFunc)){
       println("Test "+curFunc+" .........")
-      for (i <- 1 to perfTestTimes) {
-        perfLogArr += gisTest3(curFunc)
-      }
+      perfLogArr.clear()
+      perfLogArr = gisTest3(curFunc)
+      assert(perfLogArr.length == perfTestTimes)
       Util.perfLog(curFunc, perfLogArr)
     }
     else if (curFunc == "all") {
       println("Test all functions .........")
-      perfLogArr.clear()
       for (func1 <- funcList1) {
-        for (i <- 1 to perfTestTimes) {
-          perfLogArr += gisTest1(func1)
-        }
+        perfLogArr = gisTest1(func1)
         assert(perfLogArr.length == perfTestTimes)
         Util.perfLog(func1, perfLogArr)
         perfLogArr.clear()
       }
       for (func2 <- funcList2) {
-        for (i <- 1 to perfTestTimes) {
-          perfLogArr += gisTest2(func2)
-        }
+        perfLogArr = gisTest2(func2)
         assert(perfLogArr.length == perfTestTimes)
         Util.perfLog(func2, perfLogArr)
         perfLogArr.clear()
       }
       for (func3 <- funcList3) {
-        for (i <- 1 to perfTestTimes) {
-          perfLogArr += gisTest3(func3)
-        }
+        perfLogArr = gisTest3(func3)
         assert(perfLogArr.length == perfTestTimes)
         Util.perfLog(func3, perfLogArr)
         perfLogArr.clear()
@@ -189,7 +182,8 @@ object GeoSparkTest {
     println(argsMap)
   }
 
-  def gisTest1(funName:String): Double = {
+  def gisTest1(funName:String): ArrayBuffer[Double] = {
+    var costArr:ArrayBuffer[Double] = new ArrayBuffer[Double]()
     var csvPath = resourceFolder + funcCsvMap(funName)
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
@@ -207,24 +201,31 @@ object GeoSparkTest {
       sqlStr = "select "+funName+"(test.wkb1,1.2) from test"
     }
 
+    var cost = -1.0
     var start = 0.0
     var end = 0.0
-    start = System.currentTimeMillis
-    var outputDf = sparkSession.sql(sqlStr)
-    // outputDf.collect()
-    outputDf.createOrReplaceTempView("outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("UNCACHE TABLE outputDf")
-    end = System.currentTimeMillis
-    var cost = (end - start) / 1000.0
-    if (GeoSparkTest.showFlag) {
-      //      if (GeoSparkTest.showFlag) {
-      outputDf.show(false)
+    for (i <- 1 to perfTestTimes){
+      start = 0.0
+      end = 0.0
+      start = System.currentTimeMillis
+      var outputDf = sparkSession.sql(sqlStr)
+      // outputDf.collect()
+      outputDf.createOrReplaceTempView("outputDf")
+      sparkSession.sql("CACHE TABLE outputDf")
+      sparkSession.sql("UNCACHE TABLE outputDf")
+      end = System.currentTimeMillis
+      cost = (end - start) / 1000.0
+      assert(cost > 0)
+      if (GeoSparkTest.showFlag) {
+        outputDf.show(false)
+      }
+      printf("Run Time (collect)= %f[s]\n", cost)
+      costArr.append(cost)
     }
-    printf("Run Time (collect)= %f[s]\n", cost)
-    return cost
+    costArr
   }
-  def gisTest2(funName:String): Double = {
+  def gisTest2(funName:String): ArrayBuffer[Double] = {
+    var costArr:ArrayBuffer[Double] = new ArrayBuffer[Double]()
     var csvPath = resourceFolder + funcCsvMap(funName)
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
@@ -233,23 +234,31 @@ object GeoSparkTest {
     tmpDf.createOrReplaceTempView("test")
     sparkSession.sql("CACHE TABLE test")
 
+    var cost = -1.0
     var start = 0.0
     var end = 0.0
-    start = System.currentTimeMillis
-    var outputDf = sparkSession.sql("select "+funName+"(test.wkb1,test.wkb2) from test")
-    // outputDf.collect()
-    outputDf.createOrReplaceTempView("outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("UNCACHE TABLE outputDf")
-    end = System.currentTimeMillis
-    var cost = (end - start) / 1000.0
-    if (GeoSparkTest.showFlag) {
-      outputDf.show(false)
+    for (i <- 1 to perfTestTimes){
+      start = 0.0
+      end = 0.0
+      start = System.currentTimeMillis
+      var outputDf = sparkSession.sql("select "+funName+"(test.wkb1,test.wkb2) from test")
+      // outputDf.collect()
+      outputDf.createOrReplaceTempView("outputDf")
+      sparkSession.sql("CACHE TABLE outputDf")
+      sparkSession.sql("UNCACHE TABLE outputDf")
+      end = System.currentTimeMillis
+      cost = (end - start) / 1000.0
+      assert(cost > 0)
+      if (GeoSparkTest.showFlag) {
+        outputDf.show(false)
+      }
+      printf("Run Time (collect)= %f[s]\n", cost)
+      costArr.append(cost)
     }
-    printf("Run Time (collect)= %f[s]\n", cost)
-    return cost
+    costArr
   }
-  def gisTest3(funName:String): Double = {
+  def gisTest3(funName:String): ArrayBuffer[Double] = {
+    var costArr:ArrayBuffer[Double] = new ArrayBuffer[Double]()
     var csvPath = resourceFolder + funcCsvMap(funName)
     var inputDf = sparkSession.read.option("delimiter", "|").option("header", "false").csv(csvPath)
     inputDf.cache()
@@ -259,21 +268,28 @@ object GeoSparkTest {
     if (funName == "ST_Point"){
       sqlStr = "select ST_Point(cast(test._c0 as Decimal(24,20)),cast(test._c0 as Decimal(24,20))) from test"
     }
+    var cost = -1.0
     var start = 0.0
     var end = 0.0
-    start = System.currentTimeMillis
-    var outputDf = sparkSession.sql(sqlStr)
-    // outputDf.collect()
-    outputDf.createOrReplaceTempView("outputDf")
-    sparkSession.sql("CACHE TABLE outputDf")
-    sparkSession.sql("UNCACHE TABLE outputDf")
-    end = System.currentTimeMillis
-    var cost = (end - start) / 1000.0
-    if (GeoSparkTest.showFlag) {
-      outputDf.show(false)
+    for (i <- 1 to perfTestTimes){
+      start = 0.0
+      end = 0.0
+      start = System.currentTimeMillis
+      var outputDf = sparkSession.sql(sqlStr)
+      // outputDf.collect()
+      outputDf.createOrReplaceTempView("outputDf")
+      sparkSession.sql("CACHE TABLE outputDf")
+      sparkSession.sql("UNCACHE TABLE outputDf")
+      end = System.currentTimeMillis
+      cost = (end - start) / 1000.0
+      assert(cost > 0)
+      if (GeoSparkTest.showFlag) {
+        outputDf.show(false)
+      }
+      printf("Run Time (collect)= %f[s]\n", cost)
+      costArr.append(cost)
     }
-    printf("Run Time (collect)= %f[s]\n", cost)
-    return cost
+    costArr
   }
 }
 
