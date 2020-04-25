@@ -3,6 +3,7 @@
 ./idea/*
 /spark-warehouse/
 *.csv
+*.wkb
 *.class
 *.txt
 *.swo
